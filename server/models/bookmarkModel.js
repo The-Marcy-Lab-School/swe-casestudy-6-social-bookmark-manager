@@ -9,11 +9,11 @@ module.exports.list = async () => {
       bookmarks.url,
       bookmarks.user_id,
       users.username,
-      COUNT(bookmark_likes.user_id)::INT AS like_count
+      COUNT(bookmark_likes.user_id) AS like_count
     FROM bookmarks
     INNER JOIN users ON bookmarks.user_id = users.user_id
     LEFT JOIN bookmark_likes ON bookmarks.bookmark_id = bookmark_likes.bookmark_id
-    GROUP BY bookmarks.bookmark_id, users.username
+    GROUP BY bookmarks.bookmark_id, users.user_id
     ORDER BY like_count DESC
   `;
   const { rows } = await pool.query(query);
@@ -67,4 +67,3 @@ module.exports.likedByUser = async (user_id) => {
   const { rows } = await pool.query(query, [user_id]);
   return rows.map((row) => row.bookmark_id);
 };
-

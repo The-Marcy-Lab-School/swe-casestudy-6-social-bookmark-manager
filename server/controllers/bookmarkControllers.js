@@ -33,9 +33,9 @@ module.exports.deleteBookmark = async (req, res) => {
 
 module.exports.likeBookmark = async (req, res) => {
   const { bookmark_id } = req.params;
-  const like = await bookmarkModel.like(bookmark_id, req.session.user_id);
-  if (!like) return res.sendStatus(200); // already liked
-  res.status(201).send(like);
+  const likeDidSucceed = await bookmarkModel.like(bookmark_id, req.session.user_id);
+  if (!likeDidSucceed) return res.status(200).send(true); // like already exists
+  res.status(201).send(true);
 };
 
 module.exports.unlikeBookmark = async (req, res) => {

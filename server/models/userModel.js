@@ -26,9 +26,10 @@ module.exports.validatePassword = async (username, password) => {
   const bcrypt = require('bcrypt');
   const query = 'SELECT * FROM users WHERE username = $1';
   const { rows } = await pool.query(query, [username]);
-  if (!rows[0]) return null;
-  const isValid = await bcrypt.compare(password, rows[0].password_hash);
+  const user = rows[0];
+  if (!user) return null;
+  const isValid = await bcrypt.compare(password, user.password_hash);
   if (!isValid) return null;
-  return rows[0]; // intentional flaw: includes password_hash
+  return user; // intentional flaw: includes password_hash
 };
 
