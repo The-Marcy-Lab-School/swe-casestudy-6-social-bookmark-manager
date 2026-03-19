@@ -1,0 +1,230 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  background: #f5f5f5;
+  color: #1a1a1a;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Header */
+header {
+  background: #1d4ed8;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+header h1 {
+  font-size: 1.25rem;
+}
+
+#guest-controls button,
+#auth-controls button {
+  background: white;
+  color: #1d4ed8;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+#current-username {
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+/* Nav */
+nav {
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+nav button {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.75rem 0;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+nav button:hover {
+  color: #1d4ed8;
+}
+
+/* Main content */
+main {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+section h2 {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #374151;
+}
+
+/* Auth forms */
+#auth-section {
+  display: flex;
+  gap: 2rem;
+}
+
+form {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  flex: 1;
+}
+
+form h2 {
+  margin-bottom: 1rem;
+}
+
+form input {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+form button[type='submit'] {
+  background: #1d4ed8;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  width: 100%;
+}
+
+/* Add bookmark form */
+#add-bookmark-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+#add-bookmark-form div {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+#add-bookmark-form input {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+#add-bookmark-form button {
+  width: auto;
+}
+
+/* Bookmark cards */
+ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bookmark-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bookmark-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.bookmark-info a {
+  color: #1d4ed8;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.bookmark-info a:hover {
+  text-decoration: underline;
+}
+
+.bookmark-meta {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.like-btn {
+  background: none;
+  border: 1px solid #e5e7eb;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.like-btn:hover:not(:disabled) {
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.like-btn.liked {
+  border-color: #dc2626;
+  color: #dc2626;
+  font-size: 1.2rem;
+  /* compensating for slight character size differences between liked heart and un-liked heart*/
+}
+
+.like-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.delete-btn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+@media (min-width: 768px) {
+  #add-bookmark-form {
+    display: flex;
+    flex-direction: row;
+  }
+}

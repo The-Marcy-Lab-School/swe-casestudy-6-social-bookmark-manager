@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Social Bookmarks</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Social Bookmarks</h1>
+      <div id="user-controls">
+        <div id="guest-controls">
+          <button id="show-auth-btn">Log In / Register</button>
+        </div>
+        <div id="auth-controls" class="hidden">
+          <span id="current-username"></span>
+          <button id="logout-btn">Log Out</button>
+      </div>
+    </header>
+
+    <nav>
+      <button id="show-my-bookmarks-btn" class="hidden">My Bookmarks</button>
+      <button id="show-feed-btn">Feed</button>
+    </nav>
+
+    <main>
+      <section id="auth-section" class="hidden">
+        <form id="login-form">
+          <h2>Log In</h2>
+          <div>
+            <label for="login-username" class="hidden">Username</label>
+            <input type="text" id="login-username" name="username" placeholder="Username" required />
+          </div>
+          <div>
+            <label for="login-password" class="hidden">Password</label>
+            <input type="password" id="login-password" name="password" placeholder="Password" required />
+          </div>
+          <button type="submit">Log In</button>
+        </form>
+        <form id="register-form">
+          <h2>Register</h2>
+          <div>
+            <label for="register-username" class="hidden">Username</label>
+            <input type="text" id="register-username" name="username" placeholder="Username" required />
+          </div>
+          <div>
+            <label for="register-password" class="hidden">Password</label>
+            <input type="password" id="register-password" name="password" placeholder="Password" required />
+          </div>
+          <button type="submit">Register</button>
+        </form>
+      </section>
+
+      <section id="feed-section">
+        <h2>All Bookmarks</h2>
+        <ul id="feed-list"></ul>
+      </section>
+
+      <section id="my-bookmarks-section" class="hidden">
+        <h2>My Bookmarks</h2>
+        <form id="add-bookmark-form">
+          <div>
+            <label for="bookmark-title" class="hidden">Title</label>
+            <input type="text" id="bookmark-title" name="title" placeholder="Title" required />
+          </div>
+          <div>
+            <label for="bookmark-url" class="hidden">URL</label>
+            <input type="url" id="bookmark-url" name="url" placeholder="https://..." required />
+          </div>
+          <button type="submit">Add</button>
+        </form>
+        <ul id="my-bookmarks-list"></ul>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
