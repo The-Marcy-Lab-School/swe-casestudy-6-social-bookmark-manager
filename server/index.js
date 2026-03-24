@@ -15,6 +15,9 @@ const bookmarkControllers = require('./controllers/bookmarkControllers');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// Use dist (requires building the frontend) in production
+const pathToFrontend = process.env.NODE_ENV === 'production' ? '../frontend/dist' : '../frontend';
+
 // ====================================
 // Middleware
 // ====================================
@@ -22,7 +25,7 @@ const PORT = process.env.PORT || 8080;
 app.use(logRoutes);
 app.use(cookieSession({ name: 'session', secret: process.env.SESSION_SECRET })); // creates/parses cookie stored in req.session
 app.use(express.json()); // parses requests and stores JSON data in req.body
-app.use(express.static(path.join(__dirname, '../frontend')));
+app.use(express.static(path.join(__dirname, pathToFrontend)));
 
 // ====================================
 // Auth routes
