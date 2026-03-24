@@ -15,7 +15,7 @@ const bookmarkControllers = require('./controllers/bookmarkControllers');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Use dist (requires building the frontend) in production
+// Use dist (requires building the frontend) in production environment
 const pathToFrontend = process.env.NODE_ENV === 'production' ? '../frontend/dist' : '../frontend';
 
 // ====================================
