@@ -4,7 +4,7 @@ const pool = require('./pool');
 const SALT_ROUNDS = 12;
 
 const seed = async () => {
-  // Passwords must be hashed with bcrypt before storing — never insert plain text.
+  // 1. Hash passwords for seed data
   // bcrypt.hash() is async, so Promise.all() runs all three hashes in parallel
   // instead of waiting for each one sequentially (~300ms per hash at 12 rounds).
   const [aliceHash, bobHash, carolHash] = await Promise.all([
@@ -13,13 +13,40 @@ const seed = async () => {
     bcrypt.hash('password123', SALT_ROUNDS),
   ]);
 
-  // Delete in reverse dependency order to satisfy foreign key constraints.
-  // bookmark_likes references both users and bookmarks, so it must be cleared first.
-  // Deleting from users or bookmarks first would violate those foreign key constraints.
-  await pool.query('DELETE FROM bookmark_likes');
-  await pool.query('DELETE FROM bookmarks');
-  await pool.query('DELETE FROM users');
+  // 2. Drop and recreate tables for a clean slate
+  // Drop in reverse dependency order to satisfy foreign key constraints.
+  // bookmark_likes references both users and bookmarks, so it must be dropped first.
+  await pool.query('DROP TABLE IF EXISTS bookmark_likes');
+  await pool.query('DROP TABLE IF EXISTS bookmarks');
+  await pool.query('DROP TABLE IF EXISTS users');
 
+  await pool.query(`
+    CREATE TABLE users (
+      user_id       SERIAL PRIMARY KEY,
+      username      TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL
+    )
+  `);
+
+  await pool.query(`
+    CREATE TABLE bookmarks (
+      bookmark_id SERIAL PRIMARY KEY,
+      title       TEXT NOT NULL,
+      url         TEXT NOT NULL,
+      user_id     INT REFERENCES users(user_id) ON DELETE CASCADE
+    )
+  `);
+
+  await pool.query(`
+    CREATE TABLE bookmark_likes (
+      bookmark_likes_id SERIAL PRIMARY KEY,
+      user_id           INT REFERENCES users(user_id) ON DELETE CASCADE,
+      bookmark_id       INT REFERENCES bookmarks(bookmark_id) ON DELETE CASCADE,
+      UNIQUE (user_id, bookmark_id)
+    )
+  `);
+
+  // 3. Insert seed data
   // RETURNING captures the inserted rows so we have the auto-generated user_ids.
   // This avoids hardcoding IDs, which would break if the sequence isn't reset.
   const { rows: users } = await pool.query(`
@@ -45,7 +72,7 @@ const seed = async () => {
 
   const [mdn, node, postgres, express, jsinfo] = bookmarks;
 
-  // bookmark_likes has a composite primary key on (user_id, bookmark_id),
+  // bookmark_likes has a UNIQUE constraint on (user_id, bookmark_id),
   // so inserting a duplicate like (same user + same bookmark) would throw an error.
   // Each pair below must be unique.
   await pool.query(`
@@ -59,11 +86,13 @@ const seed = async () => {
       ($7, $3),
       ($7, $4)
   `, [
-    mdn.bookmark_id, alice.user_id, bob.user_id, carol.user_id,
-    node.bookmark_id,
-    postgres.bookmark_id,
-    express.bookmark_id,
-    jsinfo.bookmark_id,
+    mdn.bookmark_id, // $1
+    alice.user_id,   // $2
+    bob.user_id,     // $3
+    carol.user_id,   // $4
+    node.bookmark_id,     // $5
+    postgres.bookmark_id, // $6
+    express.bookmark_id,  // $7
   ]);
 
   return { users, bookmarks };

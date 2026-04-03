@@ -55,16 +55,13 @@ cd server
 npm install
 ```
 
-### 4. Initialize the database schema
+### 4. Seed the database
 
 ```sh
-node db/init.js
-
-# package.json also defines a db:init script
-npm run db:init
+npm run db:seed
 ```
 
-This creates the `users`, `bookmarks`, and `bookmark_likes` tables. It is safe to run multiple times.
+This drops and recreates the `users`, `bookmarks`, and `bookmark_likes` tables, then inserts sample data. It is safe to run multiple times.
 
 ### 5. Start the server
 
@@ -81,8 +78,7 @@ The app will be running at [http://localhost:8080](http://localhost:8080).
 │   ├── index.js                        # Express app, middleware, routes
 │   ├── db/
 │   │   ├── pool.js                     # Shared Postgres connection pool
-│   │   ├── init.sql                    # Schema definition
-│   │   └── init.js                     # Runs init.sql via pool
+│   │   └── seed.js                     # Drops, recreates schema, and inserts sample data
 │   ├── models/
 │   │   ├── userModel.js                # User data access and password validation
 │   │   └── bookmarkModel.js            # Bookmark data access with JOIN queries

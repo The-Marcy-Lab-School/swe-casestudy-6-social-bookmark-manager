@@ -5,7 +5,6 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "db:init": "node db/init.js",
     "db:seed": "node db/seed.js"
   },
   "dependencies": {
