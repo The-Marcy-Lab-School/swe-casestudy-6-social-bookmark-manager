@@ -57,11 +57,10 @@ app.get('/api/users/:user_id/likes', bookmarkControllers.listLikedBookmarkIds);
 // Global Error Handling
 // ====================================
 
+// Notice that this error handler has **four** parameters.
 const handleError = (err, req, res, next) => {
   console.error(err);
-  const status = err.status ?? 500;
-  const message = err.message ?? 'Internal Server Error';
-  res.status(status).json({ error: message });
+  res.status(500).send({ message: 'Internal Server Error' });
 };
 app.use(handleError);
 
