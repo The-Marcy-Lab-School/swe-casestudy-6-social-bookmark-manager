@@ -54,6 +54,18 @@ app.get('/api/users/:user_id/bookmarks', bookmarkControllers.listUserBookmarks);
 app.get('/api/users/:user_id/likes', bookmarkControllers.listLikedBookmarkIds);
 
 // ====================================
+// Global Error Handling
+// ====================================
+
+const handleError = (err, req, res, next) => {
+  console.error(err);
+  const status = err.status ?? 500;
+  const message = err.message ?? 'Internal Server Error';
+  res.status(status).json({ error: message });
+};
+app.use(handleError);
+
+// ====================================
 // Listen
 // ====================================
 

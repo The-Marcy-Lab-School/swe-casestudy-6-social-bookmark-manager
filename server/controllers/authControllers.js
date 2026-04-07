@@ -3,35 +3,47 @@ const userModel = require('../models/userModel');
 
 const SALT_ROUNDS = 12;
 
-module.exports.register = async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    return res.status(400).send({ error: 'Username and password are required.' });
-  }
+module.exports.register = async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).send({ error: 'Username and password are required.' });
+    }
 
-  const existingUser = await userModel.findByUsername(username);
-  if (existingUser) {
-    return res.status(400).send({ error: 'Username already taken.' });
-  }
+    const existingUser = await userModel.findByUsername(username);
+    if (existingUser) {
+      return res.status(400).send({ error: 'Username already taken.' });
+    }
 
-  const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-  const user = await userModel.create(username, passwordHash);
-  req.session.user_id = user.user_id; // set the user_id on the cookie
-  res.status(201).send(user);
+    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+    const user = await userModel.create(username, passwordHash);
+    req.session.user_id = user.user_id; // set the user_id on the cookie
+    res.status(201).send(user);
+  } catch (err) {
+    next(err);
+  }
 };
 
-module.exports.login = async (req, res) => {
-  const { username, password } = req.body;
-  const user = await userModel.validatePassword(username, password);
-  if (!user) return res.status(401).send({ error: 'Invalid credentials.' });
-  req.session.user_id = user.user_id; // set the user_id on the cookie
-  res.send(user); // intentional flaw: user includes password_hash
+module.exports.login = async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    const user = await userModel.validatePassword(username, password);
+    if (!user) return res.status(401).send({ error: 'Invalid credentials.' });
+    req.session.user_id = user.user_id; // set the user_id on the cookie
+    res.send(user); // intentional flaw: user includes password_hash
+  } catch (err) {
+    next(err);
+  }
 };
 
-module.exports.getMe = async (req, res) => {
-  if (!req.session.user_id) return res.sendStatus(401);
-  const user = await userModel.find(req.session.user_id);
-  res.send(user);
+module.exports.getMe = async (req, res, next) => {
+  try {
+    if (!req.session.user_id) return res.sendStatus(401);
+    const user = await userModel.find(req.session.user_id);
+    res.send(user);
+  } catch (err) {
+    next(err);
+  }
 };
 
 module.exports.logout = (req, res) => {
