@@ -4,16 +4,7 @@ const pool = require('./pool');
 const SALT_ROUNDS = 12;
 
 const seed = async () => {
-  // 1. Hash passwords for seed data
-  // bcrypt.hash() is async, so Promise.all() runs all three hashes in parallel
-  // instead of waiting for each one sequentially (~300ms per hash at 12 rounds).
-  const [aliceHash, bobHash, carolHash] = await Promise.all([
-    bcrypt.hash('password123', SALT_ROUNDS),
-    bcrypt.hash('password123', SALT_ROUNDS),
-    bcrypt.hash('password123', SALT_ROUNDS),
-  ]);
-
-  // 2. Drop and recreate tables for a clean slate
+  // 1. Drop and recreate tables for a clean slate
   // Drop in reverse dependency order to satisfy foreign key constraints.
   // bookmark_likes references both users and bookmarks, so it must be dropped first.
   await pool.query('DROP TABLE IF EXISTS bookmark_likes');
@@ -45,6 +36,15 @@ const seed = async () => {
       UNIQUE (user_id, bookmark_id)
     )
   `);
+
+  // 2. Hash passwords for seed data
+  // bcrypt.hash() is async, so Promise.all() runs all three hashes in parallel
+  // instead of waiting for each one sequentially (~300ms per hash at 12 rounds).
+  const [aliceHash, bobHash, carolHash] = await Promise.all([
+    bcrypt.hash('password123', SALT_ROUNDS),
+    bcrypt.hash('password123', SALT_ROUNDS),
+    bcrypt.hash('password123', SALT_ROUNDS),
+  ]);
 
   // 3. Insert seed data
   // RETURNING captures the inserted rows so we have the auto-generated user_ids.
