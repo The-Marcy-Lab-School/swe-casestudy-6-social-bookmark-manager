@@ -68,17 +68,20 @@ const renderMyBookmarks = (bookmarks) => {
 };
 
 const renderAuthView = (currentUser) => {
+  // The logged-in view
   if (currentUser) {
     currentUsernameEl.textContent = `@${currentUser.username}`;
     guestControls.classList.add('hidden');
-    authControls.classList.remove('hidden');
     authSection.classList.add('hidden');
+    authControls.classList.remove('hidden');
     myBookmarksSection.classList.remove('hidden');
     showMyBookmarksBtn.classList.remove('hidden');
-  } else {
+  }
+  // The logged-out view ("guest mode")
+  else {
     guestControls.classList.remove('hidden');
-    authControls.classList.add('hidden');
     authSection.classList.add('hidden');
+    authControls.classList.add('hidden');
     myBookmarksSection.classList.add('hidden');
     showMyBookmarksBtn.classList.add('hidden');
   }
