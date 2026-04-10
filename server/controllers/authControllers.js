@@ -1,7 +1,4 @@
-const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
-
-const SALT_ROUNDS = 12;
 
 module.exports.register = async (req, res, next) => {
   try {
@@ -15,9 +12,8 @@ module.exports.register = async (req, res, next) => {
       return res.status(400).send({ error: 'Username already taken.' });
     }
 
-    const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-    const user = await userModel.create(username, passwordHash);
-    req.session.user_id = user.user_id; // set the user_id on the cookie
+    const user = await userModel.create(username, password);
+    req.session.user_id = user.user_id;
     res.status(201).send(user);
   } catch (err) {
     next(err);
@@ -29,7 +25,7 @@ module.exports.login = async (req, res, next) => {
     const { username, password } = req.body;
     const user = await userModel.validatePassword(username, password);
     if (!user) return res.status(401).send({ error: 'Invalid credentials.' });
-    req.session.user_id = user.user_id; // set the user_id on the cookie
+    req.session.user_id = user.user_id;
     res.send(user); // intentional flaw: user includes password_hash
   } catch (err) {
     next(err);
@@ -50,4 +46,3 @@ module.exports.logout = (req, res) => {
   req.session = null;
   res.sendStatus(204);
 };
-
